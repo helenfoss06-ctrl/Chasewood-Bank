@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chasewood Bank — Fictional Banking Interface</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f4f7fb;color:#172033}
+button,input{font:inherit}.fictional{position:fixed;z-index:99;right:12px;bottom:10px;background:#172033;color:#fff;padding:5px 9px;border-radius:999px;font-size:9px;letter-spacing:.2px;opacity:.82;box-shadow:0 4px 12px #0002}
+.login{min-height:100vh;display:grid;place-items:center;padding:24px;background:linear-gradient(135deg,#071d3b,#123f73)}
+.login-card{width:min(430px,100%);background:#fff;border-radius:22px;padding:34px;box-shadow:0 25px 70px #0005}
+.brand{font-weight:800;font-size:27px;letter-spacing:-1px}.brand span{color:#2c69a9}
+.login-card h1{font-size:25px;margin:35px 0 8px}.muted{color:#697589;font-size:14px}
+label{display:block;font-size:13px;font-weight:700;margin:20px 0 7px}input{width:100%;padding:14px;border:1px solid #d8dee8;border-radius:10px;outline:none}input:focus{border-color:#2c69a9}
+.primary{border:0;background:#155a91;color:white;width:100%;padding:14px;border-radius:10px;font-weight:750;margin-top:22px;cursor:pointer}.error{color:#b42318;font-size:13px;margin-top:12px;display:none}
+.app{display:none;min-height:100vh}.topbar{height:70px;background:#fff;border-bottom:1px solid #e3e8ef;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:20}
+.profile{display:flex;gap:12px;align-items:center}.avatar{width:38px;height:38px;border-radius:50%;background:#dceaf7;display:grid;place-items:center;font-weight:800;color:#155a91}
+.layout{display:flex}.side{width:240px;background:#fff;border-right:1px solid #e3e8ef;min-height:calc(100vh - 70px);padding:20px 14px;position:sticky;top:70px}.nav{border:0;background:transparent;width:100%;text-align:left;padding:12px;border-radius:9px;color:#536174;cursor:pointer;margin:2px 0}.nav.active,.nav:hover{background:#eaf2f9;color:#155a91;font-weight:700}
+.main{padding:30px;max-width:1250px;width:100%;margin:auto}.welcome{display:flex;justify-content:space-between;align-items:end;margin-bottom:25px}.welcome h1{margin:0;font-size:28px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{background:#fff;border:1px solid #e5eaf0;border-radius:15px;padding:22px;box-shadow:0 4px 16px #17203308}.balance{font-size:31px;font-weight:800;margin-top:9px}.label{font-size:13px;color:#748095}.positive{color:#16764a}.section{display:none}.section.active{display:block}.accounts{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.account-row{display:flex;justify-content:space-between;align-items:center;padding:17px 0;border-bottom:1px solid #edf0f4}.pill{font-size:11px;padding:5px 9px;border-radius:99px;background:#edf6f1;color:#16764a}.transactions{width:100%;border-collapse:collapse}.transactions th,.transactions td{text-align:left;padding:14px 10px;border-bottom:1px solid #edf0f4;font-size:14px}.transactions th{font-size:12px;color:#748095}.action-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}.action{cursor:pointer;border:1px solid #e1e7ee;background:#fff;padding:20px;border-radius:13px;text-align:left}.action:hover{border-color:#9ebbd5}.modal{display:none;position:fixed;inset:0;background:#17203377;z-index:50;place-items:center;padding:20px}.modal.open{display:grid}.modal-box{background:#fff;width:min(520px,100%);border-radius:17px;padding:25px}.modal-box h2{margin-top:0}.close{float:right;border:0;background:#eef1f5;border-radius:8px;padding:7px 10px;cursor:pointer}.logout{border:0;background:transparent;color:#667387;cursor:pointer}
+@media(max-width:800px){.side{display:none}.main{padding:18px}.grid,.accounts,.action-grid{grid-template-columns:1fr}.topbar{padding:0 16px}.balance{font-size:26px}.welcome{align-items:start;gap:10px;flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="fictional">Chasewood Bank — Fictional</div>
+
+<div id="login" class="login">
+  <div class="login-card">
+    <div class="brand">CHASEWOOD <span>BANK</span></div>
+    <div class="muted" style="margin-top:5px">Secure online banking</div>
+    <h1>Sign in</h1>
+    <div class="muted">Access your accounts securely.</div>
+    <form id="loginForm">
+      <label for="username">Username</label>
+      <input id="username" autocomplete="off" placeholder="Enter username">
+      <label for="password">Password</label>
+      <input id="password" type="password" placeholder="Enter password">
+      <button class="primary">Sign in</button>
+      <div id="error" class="error">The username or password is incorrect.</div>
+    </form>
+  </div>
+</div>
+
+<div id="app" class="app">
+  <header class="topbar">
+    <div class="brand">CHASEWOOD <span>BANK</span></div>
+    <div class="profile"><div class="avatar">KW</div><div><b>Kayla Woods</b><br><span class="muted">Personal banking</span></div><button class="logout" onclick="logout()">Sign out</button></div>
+  </header>
+  <div class="layout">
+    <aside class="side">
+      <button class="nav active" data-section="overview">Overview</button>
+      <button class="nav" data-section="accounts">Accounts</button>
+      <button class="nav" data-section="activity">Activity</button>
+      <button class="nav" data-section="cards">Cards</button>
+      <button class="nav" data-section="transfers">Transfer money</button>
+      <button class="nav" data-section="bills">Pay bills</button>
+      <button class="nav" data-section="deposit">Check deposit</button>
+      <button class="nav" data-section="alerts">Alerts</button>
+    </aside>
+
+    <main class="main">
+      <section id="overview" class="section active">
+        <div class="welcome"><div><div class="muted">Good afternoon</div><h1>Welcome back, Kayla</h1></div><div class="muted">Last sign-in: Today, 1:42 PM</div></div>
+        <div class="grid">
+          <div class="card"><div class="label">Total available balance</div><div class="balance">$22,000,000.00</div><div class="positive" style="margin-top:8px">Available now</div></div>
+          <div class="card"><div class="label">Checking</div><div class="balance">$8,450,250.00</div><div class="muted">•••• 4821</div></div>
+          <div class="card"><div class="label">Savings</div><div class="balance">$13,549,750.00</div><div class="muted">•••• 9037</div></div>
+        </div>
+        <div class="card" style="margin-top:20px"><h3>Recent activity</h3><table class="transactions"><tr><th>DESCRIPTION</th><th>DATE</th><th>AMOUNT</th></tr>
+        <tr><td>Fictional Property Services</td><td>Sep 17</td><td>−$12,500.00</td></tr><tr><td>Incoming transfer</td><td>Sep 16</td><td class="positive">+$250,000.00</td></tr><tr><td>Travel & Hospitality</td><td>Sep 15</td><td>−$4,850.00</td></tr></table></div>
+      </section>
+
+      <section id="accounts" class="section"><h1>Accounts</h1><div class="accounts">
+        <div class="card"><b>Checking •••• 4821</b><div class="balance">$8,450,250.00</div><div class="account-row"><span>Available</span><span class="pill">Available</span></div><div class="account-row"><span>Pending</span><b>$2,450.00</b></div></div>
+        <div class="card"><b>Savings •••• 9037</b><div class="balance">$13,549,750.00</div><div class="account-row"><span>Interest earned YTD</span><b>$18,425.10</b></div></div>
+        <div class="card"><b>Credit card •••• 7710</b><div class="balance">$3,245.90</div><div class="account-row"><span>Available credit</span><b>$46,754.10</b></div></div>
+        <div class="card"><b>Investment account •••• 2214</b><div class="balance">$6,800,000.00</div><div class="account-row"><span>Market value</span><b>$6,800,000.00</b></div></div>
+      </div></section>
+
+      <section id="activity" class="section"><h1>Activity</h1><div class="card"><table class="transactions"><tr><th>DESCRIPTION</th><th>ACCOUNT</th><th>DATE</th><th>AMOUNT</th></tr>
+      <tr><td>Fictional Property Services</td><td>Checking</td><td>Sep 17</td><td>−$12,500.00</td></tr><tr><td>Incoming transfer</td><td>Savings</td><td>Sep 16</td><td class="positive">+$250,000.00</td></tr><tr><td>Travel & Hospitality</td><td>Checking</td><td>Sep 15</td><td>−$4,850.00</td></tr><tr><td>Investment contribution</td><td>Savings</td><td>Sep 12</td><td>−$50,000.00</td></tr></table></div></section>
+
+      <section id="cards" class="section"><h1>Cards</h1><div class="card"><h3>Chasewood Platinum Card</h3><p class="muted">•••• •••• •••• 7710</p><div class="action-grid"><button class="action" onclick="openModal('Activate card')"><b>Activate card</b><br><span class="muted">Start using a new card</span></button><button class="action" onclick="openModal('Replace card')"><b>Replace card</b><br><span class="muted">Request a replacement</span></button></div></div></section>
+
+      <section id="transfers" class="section"><h1>Transfer money</h1><div class="action-grid"><button class="action" onclick="openModal('New transfer')"><b>Make a transfer</b><br><span class="muted">Move fictional funds between accounts</span></button><button class="action" onclick="openModal('Send money')"><b>Send money</b><br><span class="muted">Fictional person-to-person payment</span></button></div></section>
+
+      <section id="bills" class="section"><h1>Pay bills</h1><div class="card"><p class="muted">Scheduled fictional payments</p><div class="account-row"><b>Electric utility</b><span>$325.40</span><button class="primary" style="width:auto;margin:0;padding:8px 14px" onclick="openModal('Pay bill')">Pay</button></div><div class="account-row"><b>Property services</b><span>$1,250.00</span><button class="primary" style="width:auto;margin:0;padding:8px 14px" onclick="openModal('Pay bill')">Pay</button></div></div></section>
+
+      <section id="deposit" class="section"><h1>Check deposit</h1><div class="card"><h3>Deposit a check</h3><p class="muted">Use the camera or select an image of a fictional check for this interface simulation.</p><input type="file" accept="image/*" id="checkFile"><button class="primary" onclick="deposit()">Submit fictional deposit</button><p id="depositMsg" class="positive"></p></div></section>
+
+      <section id="alerts" class="section"><h1>Alerts</h1><div class="card"><div class="account-row"><div><b>Large transaction alerts</b><br><span class="muted">Notify me when a transaction exceeds $10,000</span></div><input type="checkbox" checked style="width:20px"></div><div class="account-row"><div><b>Login alerts</b><br><span class="muted">Notify me about new sign-ins</span></div><input type="checkbox" checked style="width:20px"></div></div></section>
+    </main>
+  </div>
+</div>
+
+<div id="modal" class="modal"><div class="modal-box"><button class="close" onclick="closeModal()">×</button><h2 id="modalTitle">Action</h2><p class="muted">This is a fictional interface action. No real funds, accounts, cards, payments, or financial services are connected.</p><input placeholder="Enter details"><button class="primary" onclick="completeModal()">Continue</button></div></div>
+
+<script>
+const USER="kaylawoods", PASS="Kaylawoodslove1";
+const login=document.getElementById("login"), app=document.getElementById("app");
+document.getElementById("loginForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ if(document.getElementById("username").value===USER && document.getElementById("password").value===PASS){
+   login.style.display="none"; app.style.display="block";
+ } else document.getElementById("error").style.display="block";
+});
+document.querySelectorAll(".nav").forEach(btn=>btn.addEventListener("click",()=>{
+ document.querySelectorAll(".nav").forEach(x=>x.classList.remove("active"));btn.classList.add("active");
+ document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));document.getElementById(btn.dataset.section).classList.add("active");
+}));
+function logout(){app.style.display="none";login.style.display="grid";document.getElementById("password").value=""}
+function openModal(title){document.getElementById("modalTitle").textContent=title;document.getElementById("modal").classList.add("open")}
+function closeModal(){document.getElementById("modal").classList.remove("open")}
+function completeModal(){alert("Fictional action completed.");closeModal()}
+function deposit(){document.getElementById("depositMsg").textContent="Fictional check received. Processing confirmation displayed."}
+</script>
+</body>
+</html>
